@@ -15,18 +15,19 @@ const Header = () => {
   const toggleNavigation = () => {
     if (openNavigation) {
       setOpenNavigation(false);
-      //enablePageScroll();
+      enablePageScroll();
     } else {
       setOpenNavigation(true);
-      //disablePageScroll();
+      disablePageScroll();
     }
   };
 
   const handleClick = () => {
+    console.log(openNavigation)
     if (!openNavigation) return;
-
-    //enablePageScroll();
+    console.log(openNavigation)
     setOpenNavigation(false);
+    enablePageScroll();
   };
 
   return (
@@ -80,8 +81,7 @@ const Header = () => {
         <Button
           className="ml-auto lg:hidden"
           px="px-3"
-          onClick={toggleNavigation}
-        >
+          onClick={toggleNavigation}>
           <MenuSvg openNavigation={openNavigation} />
         </Button>
       </div>
