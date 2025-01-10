@@ -74,6 +74,11 @@ import facebook from "./socials/facebook.svg";
 import instagram from "./socials/instagram.svg";
 import telegram from "./socials/telegram.svg";
 import twitter from "./socials/twitter.svg";
+import javalogo from "./javalogo.svg";
+import javascriptlogo from "./javascriptlogo.svg";
+import springbootlogo from "./springbootlogo.svg";
+import nodejslogo from "./nodejslogo.svg";
+import pythonlogo from "./pythonlogo.svg";
 
 export {
   brainwave,
@@ -144,4 +149,9 @@ export {
   instagram,
   telegram,
   twitter,
+  javalogo,
+  javascriptlogo,
+  springbootlogo,
+  nodejslogo,
+  pythonlogo
 };
