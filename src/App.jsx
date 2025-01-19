@@ -1,18 +1,17 @@
 import React from 'react';
 import ButtonGradient from "./assets/svg/ButtonGradient";
 import Header from './components/Header';
-import Landing from './components/Landing'; 
-import Benefits from './components/Benefits';
+import Home from './pages/Home';
+import { Routes, Route } from "react-router-dom";
+import NewAccount from './pages/NewAccount';
 
 const App =() => {
   return(
     <>
-      <div className="pt-[4.75rem] lg:pt-[5.25rem] overflow-hidden">
-        <Header/>
-        <Landing/>
-        <Benefits/>
-      </div>
-      <ButtonGradient />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<NewAccount />} />
+        </Routes>
     </>
   );
 };
