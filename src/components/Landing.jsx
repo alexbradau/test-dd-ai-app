@@ -31,7 +31,7 @@ const Hero = () => {
             Unleash the power of Test Driven Development through AI. 
             Focus on your test classes and let our AI generate your code to specification!
           </p>
-          <Button href="/pricing" white>
+          <Button href="/#pricing" white>
             Get started
           </Button>
         </div>
