@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { disablePageScroll, enablePageScroll } from "scroll-lock";
+import { Link } from "react-router-dom";
 
 import { brainwave } from "../assets";
 import { navigation } from "../constants";
