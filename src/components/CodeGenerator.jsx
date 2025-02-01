@@ -10,6 +10,7 @@ const CodeGenerator = () => {
   const [responseText, setResponseText] = useState("");
   const [displayText, setDisplayText] = useState(""); // Holds gradually typed text
   const [loading, setLoading] = useState(false);
+  const textAreaRef = useRef(null);
 
   const API_URL = import.meta.env.VITE_GENERATE_CODE_URL;
   const parallaxRef = useRef(null);
@@ -62,6 +63,14 @@ const CodeGenerator = () => {
     setTimeout(typeCharacter, 10); // Start typing effect after first character
 
   }, [responseText]); // Runs when responseText updates
+
+  // Auto-expand textarea as text is typed
+  useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = "auto"; // Reset height
+      textAreaRef.current.style.height = textAreaRef.current.scrollHeight + "px"; // Adjust height
+    }
+  }, [displayText]); // Runs whenever displayText updates
 
   // Copy response to clipboard
   const copyToClipboard = () => {
@@ -119,10 +128,13 @@ const CodeGenerator = () => {
             <div className="w-full max-w-2xl mx-auto mt-6 p-6 shadow-lg rounded-xl relative z-10">
               <h2 className="text-2xl font-semibold mb-4">Generated Code</h2>
               <textarea
-                className="w-full h-40 p-4 rounded-lg bg-gray-950 bg-opacity-50 focus:outline-none scrollbar-hide text-white"
-                value={displayText} // Gradual typing effect here
-                readOnly
-              ></textarea>
+        ref={textAreaRef}
+        className="w-full p-4 rounded-lg bg-gray-950 bg-opacity-50 focus:outline-none scrollbar-hide text-white resize-none"
+        value={displayText} // Gradual typing effect here
+        readOnly
+        rows={1} // Start with one row
+        style={{ overflow: "hidden", minHeight: "2rem" }} // Auto-expand as text is added
+      ></textarea>
 
               {/* Copy Button */}
               <Button
