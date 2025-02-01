@@ -19,11 +19,14 @@ const CodeGenerator = () => {
     setInputText(e.target.value);
   };
 
-  // Make API call with raw text in the request body
+  // Fetch API response
   const fetchData = async () => {
     if (!inputText.trim()) return alert("Please enter some text!");
 
     setLoading(true);
+    setResponseText(""); // Reset response text
+    setDisplayText(""); // Reset display text
+
     try {
       const response = await fetch(API_URL, {
         method: "POST",
@@ -33,13 +36,32 @@ const CodeGenerator = () => {
         body: inputText,
       });
       const data = await response.json();
-      setResponseText(data.code || "No response from API");
+      setResponseText(data.code || "No response from API"); // Store full response
     } catch (error) {
       setResponseText("Error generating code");
       console.error("API Error:", error);
     }
     setLoading(false);
   };
+
+  // Typing effect: gradually updates displayText
+  useEffect(() => {
+    if (!responseText) return;
+
+    let index = 0;
+    setDisplayText(responseText.charAt(0)); // Immediately show the first character
+
+    const typeCharacter = () => {
+      index++;
+      if (index < responseText.length) {
+        setDisplayText((prev) => prev + responseText.charAt(index)); // Append character
+        setTimeout(typeCharacter, 10); // Continue typing effect
+      }
+    };
+
+    setTimeout(typeCharacter, 10); // Start typing effect after first character
+
+  }, [responseText]); // Runs when responseText updates
 
   // Copy response to clipboard
   const copyToClipboard = () => {
@@ -71,46 +93,47 @@ const CodeGenerator = () => {
 
         <BackgroundCircles />
         <div className="rounded-lg p-6 bg-transparent shadow-lg max-w-2xl mx-auto relative z-10">
-        {/* Input Text Area */}
-        <div className="w-full max-w-2xl mx-auto p-6  shadow-lg rounded-xl relative z-10">          
-          <h2 className="text-2xl font-semibold mb-4">Enter Your Test Code</h2>
-          <textarea
-            className="w-full h-32 p-4 bg-gray-950 bg-opacity-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 scrollbar-hide"
-            placeholder="Enter text to generate code..."
-            value={inputText}
-            onChange={handleInputChange}
-          ></textarea>
 
-          {/* Generate Button */}
-          <Button
-            onClick={fetchData}
-            disabled={loading}
-          >
-            {loading ? "Generating..." : "Generate Code"}
-          </Button>
-          <ButtonGradient />
-        </div>
-
-        {/* Response Box */}
-        {responseText && (
-          <div className="w-full max-w-2xl mx-auto mt-6 p-6 shadow-lg rounded-xl relative z-10">
-            <h2 className="text-2xl font-semibold mb-4">Generated Code</h2>
+          {/* Input Text Area */}
+          <div className="w-full max-w-2xl mx-auto p-6 shadow-lg rounded-xl relative z-10">          
+            <h2 className="text-2xl font-semibold mb-4">Enter Your Test Code</h2>
             <textarea
-              className="w-full h-40 p-4 rounded-lg bg-gray-950 bg-opacity-50 focus:outline-none scrollbar-hide text-white"
-              value={responseText}
-              readOnly
+              className="w-full h-32 p-4 bg-gray-950 bg-opacity-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 scrollbar-hide"
+              placeholder="Enter text to generate code..."
+              value={inputText}
+              onChange={handleInputChange}
             ></textarea>
 
-            {/* Copy Button */}
+            {/* Generate Button */}
             <Button
-              onClick={copyToClipboard}
-              disabled={!responseText}>
-              Copy to Clipboard
+              onClick={fetchData}
+              disabled={loading}
+            >
+              {loading ? "Generating..." : "Generate Code"}
             </Button>
             <ButtonGradient />
           </div>
-        )}
-      </div>
+
+          {/* Response Box */}
+          {responseText && (
+            <div className="w-full max-w-2xl mx-auto mt-6 p-6 shadow-lg rounded-xl relative z-10">
+              <h2 className="text-2xl font-semibold mb-4">Generated Code</h2>
+              <textarea
+                className="w-full h-40 p-4 rounded-lg bg-gray-950 bg-opacity-50 focus:outline-none scrollbar-hide text-white"
+                value={displayText} // Gradual typing effect here
+                readOnly
+              ></textarea>
+
+              {/* Copy Button */}
+              <Button
+                onClick={copyToClipboard}
+                disabled={!responseText}>
+                Copy to Clipboard
+              </Button>
+              <ButtonGradient />
+            </div>
+          )}
+        </div>
       </div>
 
       <BottomLine />
