@@ -13,12 +13,15 @@ const CodeGenerator = () => {
   const [inputText, setInputText] = useState("");
   const [responseText, setResponseText] = useState("");
   const [formattedText, setFormattedText] = useState(""); // Holds formatted Java code
-  const [displayText, setDisplayText] = useState(""); // Holds gradually typed text
+  const [responseProse, setResponseProse] = useState(""); // Holds prose from API response
+  const [displayCode, setDisplayCode] = useState(""); // Holds gradually typed Java code
+  const [displayProse, setDisplayProse] = useState(""); // Holds gradually typed prose
   const [loading, setLoading] = useState(false);
-  const textAreaRef = useRef(null);
+  const proseRef = useRef(null);
+  const codeRef = useRef(null);
+  const parallaxRef = useRef(null);
 
   const API_URL = import.meta.env.VITE_GENERATE_CODE_URL;
-  const parallaxRef = useRef(null);
 
   // Handle user input
   const handleInputChange = (e) => {
@@ -30,9 +33,11 @@ const CodeGenerator = () => {
     if (!inputText.trim()) return alert("Please enter some text!");
 
     setLoading(true);
-    setResponseText(""); // Reset response text
-    setFormattedText(""); // Reset formatted text
-    setDisplayText(""); // Reset display text
+    setResponseText("");
+    setFormattedText("");
+    setDisplayCode("");
+    setResponseProse("");
+    setDisplayProse("");
 
     try {
       const response = await fetch(API_URL, {
@@ -47,42 +52,74 @@ const CodeGenerator = () => {
         parser: "java",
         plugins: [javaPlugin],
       });
-      setResponseText(data.code || "No response from API"); // Store full response
-      setFormattedText(formattedCode || "No response from API"); // Store formatted code
+
+      setResponseText(data || "No response from API");
+      setResponseProse(data.prose || "No response from API");
+      setFormattedText(formattedCode || "No response from API");
     } catch (error) {
       setResponseText("Error generating code");
       setFormattedText("Error generating code");
+      setResponseProse("Error generating prose");
       console.error("API Error:", error);
     }
+
     setLoading(false);
   };
 
-  // Typing effect: gradually updates displayText
+  // Typing effect for displayCode (formatted Java code)
   useEffect(() => {
-    if (!responseText) return;
+    if (!formattedText) return;
 
     let index = 0;
-    setDisplayText(formattedText.charAt(0)); // Immediately show the first character
+    setDisplayCode(formattedText.charAt(0));
 
     const typeCharacter = () => {
       index++;
       if (index < formattedText.length) {
-        setDisplayText((prev) => prev + formattedText.charAt(index)); // Append character
-        setTimeout(typeCharacter, 10); // Continue typing effect
+        setDisplayCode((prev) => prev + formattedText.charAt(index));
+        setTimeout(typeCharacter, 10);
+      } else {
+        // Only after displayCode completes, start typing displayProse
+        startTypingProse();
       }
     };
 
-    setTimeout(typeCharacter, 10); // Start typing effect after first character
+    setTimeout(typeCharacter, 10);
+  }, [formattedText]);
 
-  }, [formattedText]); // Runs when responseText updates
+  // Typing effect for displayProse (prose text) - Only starts after displayCode finishes
+  const startTypingProse = () => {
+    if (!responseProse) return;
 
-  // Auto-expand textarea as text is typed
+    let index = 0;
+    setDisplayProse(responseProse.charAt(0));
+
+    const typeCharacter = () => {
+      index++;
+      if (index < responseProse.length) {
+        setDisplayProse((prev) => prev + responseProse.charAt(index));
+        setTimeout(typeCharacter, 10);
+      }
+    };
+
+    setTimeout(typeCharacter, 500); // Small delay before starting prose typing
+  };
+
+  // Auto-expand textarea as proseText is typed
   useEffect(() => {
-    if (textAreaRef.current) {
-      textAreaRef.current.style.height = "auto"; // Reset height
-      textAreaRef.current.style.height = textAreaRef.current.scrollHeight + "px"; // Adjust height
+    if (proseRef.current) {
+      proseRef.current.style.height = "auto";
+      proseRef.current.style.height = proseRef.current.scrollHeight + "px";
     }
-  }, [displayText]); // Runs whenever displayText updates
+  }, [displayProse]);
+
+  // Auto-expand textarea as formattedText is typed
+  useEffect(() => {
+    if (codeRef.current) {
+      codeRef.current.style.height = "auto";
+      codeRef.current.style.height = codeRef.current.scrollHeight + "px";
+    }
+  }, [displayCode]);
 
   // Copy response to clipboard
   const copyToClipboard = () => {
@@ -92,7 +129,7 @@ const CodeGenerator = () => {
   };
 
   const transparentTheme = {
-    ...oneDark, // Keep syntax colors
+    ...oneDark,
     'pre[class*="language-"]': {
       background: "none !important",
       backgroundColor: "transparent !important",
@@ -111,6 +148,7 @@ const CodeGenerator = () => {
       textAlign: "left",
     },
   };
+
   return (
     <Section
       className="pt-[12rem] -mt-[5.25rem] relative"
@@ -121,21 +159,13 @@ const CodeGenerator = () => {
     >
       <div className="container relative text-center" ref={parallaxRef}>
 
-        {/* Background Image Positioned Between Section & Content */}
         <div className="absolute -top-[54%] left-1/2 w-[234%] -translate-x-1/2 md:-top-[46%] md:w-[138%] lg:-top-[104%] z-[-1]">
-          <img
-            src={heroBackground}
-            className="w-full"
-            width={1440}
-            height={1800}
-            alt="hero"
-          />
+          <img src={heroBackground} className="w-full" width={1440} height={1800} alt="hero" />
         </div>
 
         <BackgroundCircles />
         <div className="w-11/12 max-w-screen-xl mx-auto p-6 rounded-xl bg-transparent relative z-10">
 
-          {/* Input Text Area */}
           <div className="w-11/12 max-w-screen-xl mx-auto p-6 rounded-xl bg-transparent relative z-10">
             <h2 className="text-2xl font-semibold mb-4">Enter Your Test Code</h2>
             <textarea
@@ -145,44 +175,40 @@ const CodeGenerator = () => {
               onChange={handleInputChange}
             ></textarea>
 
-            {/* Generate Button */}
-            <Button
-              onClick={fetchData}
-              disabled={loading}
-            >
+            <Button onClick={fetchData} disabled={loading}>
               {loading ? "Generating..." : "Generate Code"}
             </Button>
             <ButtonGradient />
           </div>
 
-          {/* Response Box */}
           {responseText && (
-            <div className="w-11/12 max-w-screen-xl mx-auto p-6 rounded-xl bg-transparent relative z-10">
-              <h2 className="text-2xl font-semibold mb-4">Generated Code</h2>
-
-              {/* Syntax Highlighted Java Code with Fully Transparent Background */}
-              <div className="rounded-lg p-4 overflow-auto max-h-96 bg-gray-950 bg-opacity-50 scrollbar-hide">
-                <SyntaxHighlighter
-                  language="java"
-                  style={transparentTheme} // Fully Transparent Theme
-                  wrapLongLines
-                  showLineNumbers
-                >
-                  {displayText}
-                </SyntaxHighlighter>
+            <div>
+              <div className="w-11/12 max-w-screen-xl mx-auto p-6 rounded-xl bg-transparent relative z-10">
+                <div className="rounded-lg p-4 overflow-auto max-h-96 bg-gray-950 bg-opacity-50 scrollbar-hide">
+                  <SyntaxHighlighter language="java" style={transparentTheme} wrapLongLines showLineNumbers>
+                    {displayCode}
+                  </SyntaxHighlighter>
+                </div>
+                <Button onClick={copyToClipboard} disabled={!responseText}>
+                  Copy to Clipboard
+                </Button>
+                <ButtonGradient />
               </div>
-              {/* Copy Button */}
-              <Button
-                onClick={copyToClipboard}
-                disabled={!responseText}>
-                Copy to Clipboard
-              </Button>
-              <ButtonGradient />
+
+              <div className="w-11/12 max-w-screen-xl mx-auto p-6 rounded-xl bg-transparent relative z-10">
+                <textarea
+                  ref={proseRef}
+                  className="w-full p-4 bg-gray-950 bg-opacity-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 scrollbar-hide resize-none"
+                  value={displayProse}
+                  readOnly
+                  rows={1}
+                  style={{ overflow: "hidden", minHeight: "2rem" }}
+                ></textarea>
+              </div>
             </div>
           )}
         </div>
       </div>
-
       <BottomLine />
     </Section>
   );
