@@ -133,10 +133,10 @@ const CodeGenerator = () => {
         </div>
 
         <BackgroundCircles />
-        <div className="rounded-lg p-6 bg-transparent shadow-lg max-w-2xl mx-auto relative z-10">
+        <div className="w-11/12 max-w-screen-xl mx-auto p-6 rounded-xl bg-transparent relative z-10">
 
           {/* Input Text Area */}
-          <div className="w-full max-w-2xl mx-auto p-6 shadow-lg rounded-xl relative z-10">
+          <div className="w-11/12 max-w-screen-xl mx-auto p-6 rounded-xl bg-transparent relative z-10">
             <h2 className="text-2xl font-semibold mb-4">Enter Your Test Code</h2>
             <textarea
               className="w-full h-32 p-4 bg-gray-950 bg-opacity-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 scrollbar-hide"
@@ -157,7 +157,7 @@ const CodeGenerator = () => {
 
           {/* Response Box */}
           {responseText && (
-            <div className="w-full max-w-2xl mx-auto mt-6 p-6 shadow-lg rounded-xl relative z-10">
+            <div className="w-11/12 max-w-screen-xl mx-auto p-6 rounded-xl bg-transparent relative z-10">
               <h2 className="text-2xl font-semibold mb-4">Generated Code</h2>
 
               {/* Syntax Highlighted Java Code with Fully Transparent Background */}
