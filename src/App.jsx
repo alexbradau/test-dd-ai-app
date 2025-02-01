@@ -1,9 +1,8 @@
 import React from 'react';
-import ButtonGradient from "./assets/svg/ButtonGradient";
-import Header from './components/Header';
 import Home from './pages/Home';
 import { Routes, Route } from "react-router-dom";
 import NewAccount from './pages/NewAccount';
+import Demo from './pages/Demo';
 
 const App =() => {
   return(
@@ -11,6 +10,7 @@ const App =() => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<NewAccount />} />
+          <Route path="/demo" element={<Demo />} />
         </Routes>
     </>
   );
