@@ -123,7 +123,7 @@ const CodeGenerator = () => {
 
   // Copy response to clipboard
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(responseText)
+    navigator.clipboard.writeText(formattedText)
       .then(() => alert("Copied to clipboard!"))
       .catch((err) => console.error("Clipboard error:", err));
   };
