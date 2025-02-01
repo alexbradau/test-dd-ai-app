@@ -5,7 +5,7 @@ const CodeGenerator = () => {
   const [responseText, setResponseText] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const API_URL = "http://localhost:6060/generateCode"; // Replace with your actual API endpoint
+  const API_URL = import.meta.env.VITE_GENERATE_CODE_URL;
 
   // Handle user input
   const handleInputChange = (e) => {
