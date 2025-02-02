@@ -1,18 +1,17 @@
-import { useLocation } from "react-router-dom";
 import { disablePageScroll, enablePageScroll } from "scroll-lock";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 import { brainwave } from "../assets";
 import { navigation } from "../constants";
 import Button from "./Button";
 import MenuSvg from "../assets/svg/MenuSvg";
 import { HamburgerMenu } from "./design/Header";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Header = () => {
-  const pathname = useLocation();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [openNavigation, setOpenNavigation] = useState(true);
-  const navigate = useNavigate
   
   const toggleNavigation = () => {
     if (openNavigation) {
@@ -24,14 +23,34 @@ const Header = () => {
     }
   };
 
-  const handleClick = () => {
-    navigate("/")
-    console.log(openNavigation)
-    if (!openNavigation) return;
-    console.log(openNavigation)
-    setOpenNavigation(false);
-    enablePageScroll();
-  };
+
+// Function to handle navigation and scrolling
+const handleNavigation = (event, sectionId) => {
+  event.preventDefault(); // Prevent default anchor behavior
+
+  if (location.pathname !== "/") {
+    navigate("/", { replace: true }); // Navigate to home first
+    setTimeout(() => scrollToSection(sectionId), 500); // Delay scrolling to ensure page loads
+  } else {
+    scrollToSection(sectionId); // Scroll immediately if already on home
+  }
+};
+
+// Function to smoothly scroll to a section
+const scrollToSection = (id) => {
+  const element = document.querySelector(id);
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+};
+
+// Automatically scroll to section when navigating back to home
+useEffect(() => {
+  const hash = window.location.hash;
+  if (hash) {
+    setTimeout(() => scrollToSection(hash), 500); // Ensure DOM is ready
+  }
+}, [location.pathname]);
 
   return (
     <div
@@ -54,11 +73,11 @@ const Header = () => {
               <a
                 key={item.id}
                 href={item.url}
-                onClick={handleClick}
+                onClick={(e) => handleNavigation(e, item.url)}
                 className={`block relative font-code text-2xl uppercase text-n-1 transition-colors hover:text-color-1 ${
                   item.onlyMobile ? "lg:hidden" : ""
                 } px-6 py-6 md:py-8 lg:-mr-0.25 lg:text-xs lg:font-semibold ${
-                  item.url === pathname.hash
+                  item.url === location.hash
                     ? "z-2 lg:text-n-1"
                     : "lg:text-n-1/50"
                 } lg:leading-5 lg:hover:text-n-1 xl:px-12`}
