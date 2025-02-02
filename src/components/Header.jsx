@@ -30,7 +30,7 @@ const handleNavigation = (event, sectionId) => {
 
   if (location.pathname !== "/") {
     navigate("/", { replace: true }); // Navigate to home first
-    setTimeout(() => scrollToSection(sectionId), 500); // Delay scrolling to ensure page loads
+    setTimeout(() => scrollToSection(sectionId), 50); // Delay scrolling to ensure page loads
   } else {
     scrollToSection(sectionId); // Scroll immediately if already on home
   }
@@ -48,7 +48,7 @@ const scrollToSection = (id) => {
 useEffect(() => {
   const hash = window.location.hash;
   if (hash) {
-    setTimeout(() => scrollToSection(hash), 500); // Ensure DOM is ready
+    setTimeout(() => scrollToSection(hash), 50); // Ensure DOM is ready
   }
 }, [location.pathname]);
 
