@@ -77,14 +77,14 @@ const CodeGenerator = () => {
       index++;
       if (index < formattedText.length) {
         setDisplayCode((prev) => prev + formattedText.charAt(index));
-        setTimeout(typeCharacter, 10);
+        setTimeout(typeCharacter, 5);
       } else {
         // Only after displayCode completes, start typing displayProse
         startTypingProse();
       }
     };
 
-    setTimeout(typeCharacter, 10);
+    setTimeout(typeCharacter, 5);
   }, [formattedText]);
 
   // Typing effect for displayProse (prose text) - Only starts after displayCode finishes
@@ -174,11 +174,12 @@ const CodeGenerator = () => {
               value={inputText}
               onChange={handleInputChange}
             ></textarea>
-
-            <Button onClick={fetchData} disabled={loading}>
+            <div className="flex justify-start">
+            <Button onClick={fetchData} textAlign disabled={loading}>
               {loading ? "Generating..." : "Generate Code"}
             </Button>
             <ButtonGradient />
+            </div>
           </div>
 
           {responseText && (
@@ -189,10 +190,12 @@ const CodeGenerator = () => {
                     {displayCode}
                   </SyntaxHighlighter>
                 </div>
+                <div className="flex justify-start">
                 <Button onClick={copyToClipboard} disabled={!responseText}>
                   Copy to Clipboard
                 </Button>
                 <ButtonGradient />
+                </div>
               </div>
 
               <div className="w-11/12 max-w-screen-xl mx-auto p-6 rounded-xl bg-transparent relative z-10">
