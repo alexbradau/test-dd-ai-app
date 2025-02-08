@@ -3,6 +3,7 @@ import Landing from '../components/Landing'
 import Benefits from '../components/Benefits';
 import Header from '../components/Header';
 import ButtonGradient from '../assets/svg/ButtonGradient';
+import Pricing from '../components/Pricing';
 
 const Home = () => {
     return (
@@ -11,6 +12,7 @@ const Home = () => {
                 <Header />
                 <Landing />
                 <Benefits />
+                <Pricing />
             </div>
             <ButtonGradient />
         </>
