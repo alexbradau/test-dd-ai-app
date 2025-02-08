@@ -2,6 +2,8 @@ import { check } from "../assets";
 import { pricing } from "../constants";
 import Button from "./Button";
 
+
+
 const PricingList = () => {
     return (
         <div className="flex gap-[1rem] max-lg:flex-wrap">
@@ -29,12 +31,12 @@ const PricingList = () => {
 
                     <Button
                         className="w-full mb-6"
-                        href={item.price == 0 ? "/demo" : null}
+                        href={item.id == 0 ? "/demo" : null}
                         white={!!item.price}
                     >
                         {(() => {
-                            if (item.price == 0) {return "Try Now";}
-                            else if (item.price > 0) {return "Coming Soon!"}
+                            if (item.id == 0) {return "Try Now";}
+                            else if (item.id == 1) {return "Coming Soon!"}
                             else { return "Contact us"};
                         })()}
                     </Button>
