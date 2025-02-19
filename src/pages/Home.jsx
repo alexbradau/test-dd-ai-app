@@ -12,7 +12,7 @@ const Home = () => {
                 <Header />
                 <Landing />
                 <Benefits />
-                <Pricing />
+                {/* <Pricing /> */}
             </div>
             <ButtonGradient />
         </>

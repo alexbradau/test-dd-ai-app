@@ -47,7 +47,7 @@ import {
       title: "Features",
       url: "#features",
     },
-    {
+    /*{
       id: "1",
       title: "Pricing",
       url: "#pricing",
@@ -56,7 +56,7 @@ import {
       id: "2",
       title: "How to use",
       url: "#how-to-use",
-    },
+    },*/
     {
       id: "3",
       title: "New account",
